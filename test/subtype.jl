@@ -1996,3 +1996,8 @@ let T = TypeVar(:T, Real),
     @test !(UnionAll(T, UnionAll(V, UnionAll(T, Type{Pair{T, V}}))) <: UnionAll(T, UnionAll(V, Type{Pair{T, V}})))
     @test !(UnionAll(T, UnionAll(V, UnionAll(T, S))) <: UnionAll(T, UnionAll(V, S)))
 end
+
+# issue #39088
+@testintersect(Tuple{NTuple{N, Int}, NTuple{N, Int}} where N,
+               Tuple{Tuple{Int, Vararg{Any}}, NTuple{4, Int64}},
+               Tuple{NTuple{4, Int64}, NTuple{4, Int64}})
