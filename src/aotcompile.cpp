@@ -253,10 +253,12 @@ static void jl_ci_cache_lookup(const jl_cgparams_t &cgparams, jl_method_instance
 // takes the running content that has collected in the shadow module and dump it to disk
 // this builds the object file portion of the sysimage files for fast startup, and can
 // also be used be extern consumers like GPUCompiler.jl to obtain a module containing
-// all reachable & inferrrable functions. The `policy` flag switches between the default
-// mode `0`, the extern mode `1`.
+// all reachable & inferrrable functions.
+// The `policy` flag switches between the default mode `0` and the extern mode `1` used by GPUCompiler.
+// `_imaging_mode` controls if raw pointers can be embedded (e.g. the code will be loaded into the same session).
+// `_cache` allows the usage of native caches if available for pkgimage.
 extern "C" JL_DLLEXPORT
-void *jl_create_native_impl(jl_array_t *methods, LLVMOrcThreadSafeModuleRef llvmmod, const jl_cgparams_t *cgparams, int _policy, int _imaging_mode)
+void *jl_create_native_impl(jl_array_t *methods, LLVMOrcThreadSafeModuleRef llvmmod, const jl_cgparams_t *cgparams, int _policy, int _imaging_mode, int _cache)
 {
     if (cgparams == NULL)
         cgparams = &jl_default_cgparams;
@@ -276,6 +278,7 @@ void *jl_create_native_impl(jl_array_t *methods, LLVMOrcThreadSafeModuleRef llvm
     JL_LOCK(&jl_codegen_lock);
     jl_codegen_params_t params(ctxt);
     params.params = cgparams;
+    params.cache = _cache;
     uint64_t compiler_start_time = 0;
     uint8_t measure_compile_time_enabled = jl_atomic_load_relaxed(&jl_measure_compile_time_enabled);
     if (measure_compile_time_enabled)
