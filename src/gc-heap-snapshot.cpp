@@ -461,7 +461,7 @@ void serialize_heap_snapshot(ios_t *stream, HeapSnapshot &snapshot, char all_one
         ios_printf(stream, "%zu", from_node.type);
         ios_printf(stream, ",%zu", from_node.name);
         ios_printf(stream, ",%zu", from_node.id);
-        ios_printf(stream, ",%zu", all_one ? 1 : from_node.self_size);
+        ios_printf(stream, ",%zu", all_one ? (size_t)1 : from_node.self_size);
         ios_printf(stream, ",%zu", from_node.edges.size());
         ios_printf(stream, ",%zu", from_node.trace_node_id);
         ios_printf(stream, ",%d", from_node.detachedness);
