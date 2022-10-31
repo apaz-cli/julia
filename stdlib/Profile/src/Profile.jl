@@ -607,7 +607,7 @@ error_codes = Dict(
 """
     fetch(;include_meta = true) -> data
 
-Returns a copy of the buffer of profile backtraces. Note that the
+Return a copy of the buffer of profile backtraces. Note that the
 values in `data` have meaning only on this machine in the current session, because it
 depends on the exact memory addresses used in JIT-compiling. This function is primarily for
 internal use; [`retrieve`](@ref) may be a better choice for most users.
@@ -1254,7 +1254,7 @@ function take_heap_snapshot(filepath::String, all_one::Bool=false)
     return filepath
 end
 function take_heap_snapshot(all_one::Bool=false)
-    f = joinpath(pwd(), "$(getpid())_$(time_ns()).heapsnapshot")
+    f = abspath("$(getpid())_$(time_ns()).heapsnapshot")
     return take_heap_snapshot(f, all_one)
 end
 
